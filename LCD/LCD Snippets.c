@@ -15,8 +15,24 @@ sbit LCD_D5_Direction at TRISB5_bit;
 sbit LCD_D4_Direction at TRISB4_bit;
 // End of LCD Pin direction
 void main() {
-Lcd_Init();// Initialize LCD
-Lcd_Cmd(_LCD_CLEAR);// Clear Display
-Lcd_Cmd(_LCD_CURSOR_OFF); // Cursor Off
-Lcd_Out(1,1,”LCD INTERFACE”);// Write “LCD INTERFACE” in the first row
+    lcdInit();
+    start();
+    Delay_ms(1000);
+    
+}
+//Code to initialize LCD during start up
+void lcdInit(){
+  Lcd_Init();
+  Lcd_Cmd(_LCD_CLEAR);
+  Lcd_Cmd(_LCD_CURSOR_OFF);
+}
+
+void start(){
+  Lcd_Out(1,1,”   Welcome to   ”);
+  char *name = ” TSK India Elc. ”;
+  Lcd_Cmd(_LCD_SECOND_ROW);
+  for(int i=0;i<16;i++){
+    Lcd_Chr_Cp(name[i]);
+    Delay_ms(1000);
+  }
 }
