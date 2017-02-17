@@ -1,6 +1,28 @@
+// LCD Module connections
+sbit LCD_RS at RB2_bit;
+sbit LCD_EN at RB3_bit;
+sbit LCD_D7 at RB7_bit;
+sbit LCD_D6 at RB6_bit;
+sbit LCD_D5 at RB5_bit;
+sbit LCD_D4 at RB4_bit;
+// End LCD module connections
+// LCD Pin direction
+sbit LCD_RS_Direction at TRISB2_bit;
+sbit LCD_EN_Direction at TRISB3_bit;
+sbit LCD_D7_Direction at TRISB7_bit;
+sbit LCD_D6_Direction at TRISB6_bit;
+sbit LCD_D5_Direction at TRISB5_bit;
+sbit LCD_D4_Direction at TRISB4_bit;
+// End of LCD Pin direction
+
+//Code to initialize LCD during start up
+void lcdInit(){
+    Lcd_Init();
+    Lcd_Cmd(_LCD_CLEAR);
+    Lcd_Cmd(_LCD_CURSOR_OFF);
+}
 //Address reference
 //https://electrosome.com/wp-content/uploads/2012/05/Time-Keeper-Registers.png
-
 //https://electrosome.com/wp-content/uploads/2012/05/Reading-Data-from-DS1307.jpg
 unsigned short read_ds1307(unsigned short address)
 {
@@ -14,7 +36,6 @@ unsigned short read_ds1307(unsigned short address)
   I2C1_Stop();
   return(temp);
 }
- 
 //https://electrosome.com/wp-content/uploads/2012/05/data-write.png
 void write_ds1307(unsigned short address, unsigned short w_data)
 {
@@ -90,8 +111,12 @@ char* getDate(){
 
 void main(){
   I2C1_Init(100000);
-  Lcd_out(1,1,"Time:");
-  Lcd_out(1,6,getTime());
-  Lcd_out(2,1,"Date:");
-  Lcd_out(2,1,getDate());
+  lcdInit();
+  while(1)
+  {
+    Lcd_out(1,1,"Time:");
+    Lcd_out(1,6,getTime());
+    Lcd_out(2,1,"Date:");
+    Lcd_out(2,6,getDate());
+  }
 }
