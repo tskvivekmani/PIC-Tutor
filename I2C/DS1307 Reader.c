@@ -4,7 +4,7 @@
 //https://electrosome.com/wp-content/uploads/2012/05/Reading-Data-from-DS1307.jpg
 unsigned short read_ds1307(unsigned short address)
 {
-  unsigned short temp
+  unsigned short temp;
   I2C1_Start();
   I2C1_Wr(0xD0);
   I2C1_Wr(address);
@@ -55,3 +55,43 @@ int BCD2Binary(int a){
   return r;
 }
 
+char* getTime(){
+  char time[] = "00:00:00 AM";
+  short fullHr = read_ds1307(2);
+  short hr = fullHr & 0b00011111;
+  short ap = fullHr & 0b00100000;
+  short min = read_ds1307(1);
+  short sec=read_ds1307(0);
+  time[0] = BCD2UpperCh(hr);
+  time[1] = BCD2LowerCh(hr);
+  time[3] = BCD2UpperCh(min);
+  time[4] = BCD2LowerCh(min);
+  time[6] = BCD2UpperCh(sec);
+  time[7] = BCD2LowerCh(sec);
+  time[10] = 'M';
+  if(ap)
+    time[9] = 'P';
+  else
+    time[9] = 'A';
+  return time;
+}
+
+char* getDate(){
+  char date[] = "00/00/00";
+  short day=read_ds1307(4),month=read_ds1307(5),year=read_ds1307(6);
+  date[0] = BCD2UpperCh(day);
+  date[1] = BCD2LowerCh(day);
+  date[3] = BCD2UpperCh(month);
+  date[4] = BCD2LowerCh(month);
+  date[6] = BCD2UpperCh(year);
+  date[7] = BCD2LowerCh(year);
+  return date;
+}
+
+void main(){
+  I2C1_Init(100000);
+  Lcd_out(1,1,"Time:");
+  Lcd_out(1,6,getTime());
+  Lcd_out(2,1,"Date:");
+  Lcd_out(2,1,getDate());
+}
