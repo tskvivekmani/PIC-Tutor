@@ -1,5 +1,6 @@
 # Getting started with MPLAB XC8
 @ LCD Commands
+  (Refr: https://electrosome.com/lcd-pic-mplab-xc8/)
 
  + Lcd_Clear() : To clear the display.
  + Lcd_Set_Cursor(int row, int column) : This function is used to set row and column of the cursor on the LCD screen. By using this function we can change the position of the character or string displayed by following functions.
